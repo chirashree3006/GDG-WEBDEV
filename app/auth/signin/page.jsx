@@ -11,10 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { FcGoogle } from "react-icons/fc";
 import DWASFWLoader from "@/components/GDGLoader";
 
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -32,12 +31,7 @@ const spaceGrotesk = Space_Grotesk({
 export default function SignInPage() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-
-  const [mode, setMode] = useState("signin"); // "signin" | "signup"
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     if (session?.user && !isPending) {
@@ -59,127 +53,55 @@ export default function SignInPage() {
     );
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
-
-    if (mode === "signup" && !name) {
-      toast.error("Please enter your name.");
-      return;
-    }
-
-    setSubmitting(true);
+  const handleGoogleSignIn = async () => {
+    setIsRedirecting(true);
     try {
-      if (mode === "signup") {
-        const res = await authClient.signUp.email({
-          email,
-          password,
-          name,
-          callbackURL: "/",
-        });
-        if (res?.error) {
-          toast.error(res.error.message || "Failed to create account.");
-        } else {
-          toast.success("Account created successfully!");
-          router.push("/");
-        }
-      } else {
-        const res = await authClient.signIn.email({
-          email,
-          password,
-          callbackURL: "/",
-        });
-        if (res?.error) {
-          toast.error(res.error.message || "Invalid credentials.");
-        } else {
-          toast.success("Signed in successfully!");
-          router.push("/");
-        }
+      const res = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+      if (res?.error) {
+        toast.error(res.error.message || "Could not sign in with Google.");
+        setIsRedirecting(false);
       }
+      // On success, better-auth redirects the browser to Google; no further
+      // action needed here.
     } catch (err) {
-      console.error("Auth error:", err);
-      toast.error("Authentication failed. Please check your credentials.");
-    } finally {
-      setSubmitting(false);
+      console.error("Google sign-in error:", err);
+      toast.error("Something went wrong. Please try again.");
+      setIsRedirecting(false);
     }
   };
 
   return (
-    <main style={{ padding: "20px", maxWidth: "400px", margin: "40px auto" }}>
-      <h1>Recruitment 2026</h1>
-      <p>Candidate Portal</p>
-
-      <div>
-        <button
-          type="button"
-          onClick={() => setMode("signin")}
-          disabled={mode === "signin"}
-        >
-          Sign In
-        </button>
-        {" | "}
-        <button
-          type="button"
-          onClick={() => setMode("signup")}
-          disabled={mode === "signup"}
-        >
-          Create Account
-        </button>
-      </div>
-
-      <hr />
-
-      <h2>{mode === "signin" ? "Sign In" : "Create Account"}</h2>
-
-      <form onSubmit={handleSubmit}>
-        {mode === "signup" && (
-          <div style={{ marginBottom: "12px" }}>
-            <label htmlFor="name">Full Name: </label>
-            <br />
-            <input
-              id="name"
-              type="text"
-              placeholder="Jane Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-        )}
-
-        <div style={{ marginBottom: "12px" }}>
-          <label htmlFor="email">Email Address: </label>
-          <br />
-          <input
-            id="email"
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label htmlFor="password">Password: </label>
-          <br />
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Processing..." : mode === "signin" ? "Sign In" : "Create Account"}
-        </button>
-      </form>
+    <main
+      className={`${bricolageGrotesque.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0d0d11] flex items-center justify-center px-4`}
+    >
+      <Card className="w-full max-w-md bg-[#141418] border-white/10 text-white">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="font-[family-name:var(--font-bricolage-grotesque)] text-3xl">
+            Recruitment 2026
+          </CardTitle>
+          <CardDescription className="font-[family-name:var(--font-space-grotesk)] text-zinc-400">
+            Sign in with your VIT email to start your application.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-3 bg-white text-black hover:bg-zinc-200 h-12"
+            onClick={handleGoogleSignIn}
+            disabled={isRedirecting}
+          >
+            <FcGoogle size={20} />
+            {isRedirecting ? "Redirecting to Google..." : "Continue with Google"}
+          </Button>
+          <p className="text-xs text-zinc-500 text-center">
+            Use your official VIT email address. Accounts are not created with any other method.
+          </p>
+        </CardContent>
+      </Card>
     </main>
   );
 }

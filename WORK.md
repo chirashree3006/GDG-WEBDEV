@@ -55,6 +55,21 @@ Fix: skip and log that one recipient, continue sending to the rest.
 
 ---
 
+## 1a. Sign-in bypassed the entire identity check
+
+**Files:** `app/auth/signin/page.jsx`, `lib/auth.js`
+
+This is arguably the most significant functional bug found. Everything about this app assumes applicants are verified via Google OAuth on their VIT email (`.env.example` literally labels the Google credentials section "VIT Email Auth", the README describes it that way, and a correctly-built, Google-only `SignInButton.jsx` component already existed in the codebase) — but the actual `/auth/signin` page never used it. Instead it shipped a fully open **email + password sign-up form**: `authClient.signUp.email({ email, password, name })`, with no domain restriction, no verification, nothing. `emailAndPassword: { enabled: true }` was set server-side in `lib/auth.js` to make this work.
+
+Net effect: anyone, VIT student or not, could create an account with any email address and password and go submit applications, completely bypassing the identity check the rest of the system is designed around. The shadcn `Card`/`Button`/`Input`/`Label` components and custom fonts were even imported into that page and left unused — the page reads like a Google-OAuth screen that had its actual sign-in logic swapped out for a generic email/password form at some point.
+
+Fix:
+- `lib/auth.js`: `emailAndPassword.enabled` set to `false`. Self-registration with an arbitrary email is no longer possible even by calling the auth API directly.
+- `app/auth/signin/page.jsx`: rewritten as a Google-only sign-in screen (`authClient.signIn.social({ provider: "google" })`), using the shadcn `Card`/`Button` components that were already imported but unused, matching the site's dark theme.
+- `components/SignInButton.jsx` (the already-correct, but likewise unwired, Google sign-in button) confirms this was the intended pattern all along — it just was never used anywhere either.
+
+---
+
 ## 2. Dependency / build health
 
 ### 2.1 `npm install` failed outright for a fresh clone
@@ -126,6 +141,7 @@ The department/shortlist filters (`filterFunc`/`shortlistedFilterFunc`) re-deriv
 - Added `README.md` — setup instructions, env var reference, feature list, tech stack, project structure, customization notes.
 - Added `LICENSE` (MIT).
 - Removed a stray `console.log("Connected to Firestore")` and other leftover debug logs picked up during the API-route cleanup above (kept `console.error` calls — those are legitimate error logging).
+- Removed 5 unused `lucide-react` icon imports left over in `components/FormComp.jsx` from earlier edits.
 - This file (`WORK.md`).
 
 ---
