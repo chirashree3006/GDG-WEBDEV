@@ -21,7 +21,6 @@ import { toast } from "sonner";
 export default function DialogComp({ selectedApplicants }) {
     const [shortlistStatus, setShortlistStatus] = useState([]);
 
-    // Initialize the shortlist status when the component loads
     useEffect(() => {
         const status = selectedApplicants().map(applicant => applicant.shortlisted);
         setShortlistStatus(status);

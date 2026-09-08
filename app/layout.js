@@ -1,10 +1,7 @@
-// Providers
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SubmissionsProvider } from "@/components/SubmissionsProvider";
-// Fonts
 import { productSans } from "./fonts";
-// Styling
 import "./globals.css";
 
 export const metadata = {

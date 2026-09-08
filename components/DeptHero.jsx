@@ -5,9 +5,6 @@ import { Switch } from "@/components/ui/switch";
 
 const DeptHero = ({ dept, setPhotoQs, photoQs, isLoading, setIsLoading }) => {
   useEffect(() => {
-    // setIsLoading is optional -- some callers (e.g. the /development page)
-    // render this without it, and calling it unconditionally used to throw
-    // "setIsLoading is not a function" and crash the page.
     if (typeof setIsLoading === "function") {
       setIsLoading(false);
     }

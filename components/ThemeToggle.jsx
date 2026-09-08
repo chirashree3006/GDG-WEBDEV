@@ -1,8 +1,6 @@
 "use client";
-// Icons import
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-// ShadCN imports
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -11,7 +9,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// ThemeToggle Component
 export default function ThemeToggle() {
     const { setTheme } = useTheme();
 

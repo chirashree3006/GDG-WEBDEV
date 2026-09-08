@@ -1,12 +1,9 @@
 "use client";
-// React imports
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { ThemeProvider } from "next-themes";
-// MagicUI import
 import Particles from "@/components/magicui/particles";
 import AnimatedButton from "./AnimatedButton";
-// Particles Component
 const ParticlesComp = () => {
     const { theme } = useTheme();
     const [color, setColor] = useState("#ffffff");

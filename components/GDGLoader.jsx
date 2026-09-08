@@ -1,7 +1,5 @@
-// React import
 import React from "react";
 
-// Loader Component
 const DWASFWLoader = () => {
   return (
     <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3">

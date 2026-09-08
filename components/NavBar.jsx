@@ -11,7 +11,6 @@ import { authClient } from "@/lib/auth-client";
 const NavBar = () => {
   const router = useRouter();
 
-  // Use Better Auth's useSession hook directly
   const { data: session, isPending } = authClient.useSession();
 
   const [userSessionEmail, setUserSessionEmail] = useState("");
@@ -20,7 +19,6 @@ const NavBar = () => {
   const [navigationRouteList, setNavigationRouteList] = useState([]);
   const [scrollElevation, setScrollElevation] = useState(0);
 
-  // Update header elevation based on scroll offset
   useEffect(() => {
     const handleWindowScroll = () => {
       setScrollElevation(window.scrollY);
@@ -29,7 +27,6 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleWindowScroll);
   }, []);
 
-  // Sync user email from current session
   useEffect(() => {
     if (session?.user?.email) {
       setUserSessionEmail(session.user.email);
@@ -38,17 +35,14 @@ const NavBar = () => {
     }
   }, [session]);
 
-  // Derive authentication state
   useEffect(() => {
     setIsAuthenticated(Boolean(userSessionEmail));
   }, [userSessionEmail]);
 
-  // Check admin role permissions
   useEffect(() => {
     setHasAdminPermissions(session?.user?.role === "admin");
   }, [isAuthenticated, session]);
 
-  // Build navigation items list
   useEffect(() => {
     const baseItems = [{ label: "Departments", href: "/departments" }];
     if (isAuthenticated && hasAdminPermissions) {
@@ -57,7 +51,6 @@ const NavBar = () => {
     setNavigationRouteList(baseItems);
   }, [isAuthenticated, hasAdminPermissions]);
 
-  // Prepare user profile payload snapshot
   const activeUserDataSnapshot = session?.user ? JSON.parse(JSON.stringify(session.user)) : null;
 
   return (

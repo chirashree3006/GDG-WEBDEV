@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 const transporter = nodemailer.createTransport({
-    service: "gmail", // or your preferred email service
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,

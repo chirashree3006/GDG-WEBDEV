@@ -1,12 +1,9 @@
 "use client";
-// React import
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
-// Constant import
 import { reviews } from "@/constants/index";
 
-// Component imports
 import NavBar from "@/components/NavBar";
 import FormComp from "@/components/FormComp";
 import Footer from "@/components/Footer";
@@ -18,13 +15,11 @@ const JoinDepartmentPage = ({ params }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // Use Better Auth's useSession hook directly
   const { data: session, isPending } = authClient.useSession();
 
   const user = session?.user;
   const isSignedIn = !!user;
 
-  // Show loading state while checking authentication
   if (isPending) {
     return (
       <main>

@@ -1,4 +1,3 @@
-// Current Date
 import {
   ManageAccounts,
   Trophy,
@@ -44,7 +43,6 @@ export const days = [
   "Sunday",
 ];
 
-// Contact Links
 export const LINKS = {
   instagram: "#",
   discord: "#",
@@ -53,7 +51,6 @@ export const LINKS = {
   x: "#",
 };
 
-// Department Details
 export const reviews = [
   {
       id: "c21ca066-ab4d-40a3-943c-f170d6312bdc",
@@ -141,7 +138,6 @@ export const reviews = [
     },
 ];
 
-// Questionnaire Data
 export const QuestionnaireData = [
   {
     department: "∑_ApZ3V_gh",
@@ -555,7 +551,6 @@ export const QuestionnaireData = [
   },
 ];
 
-// Sample Admin Data
 export const sampleAdminHeader = [
   {
     Header: "SrNo",
@@ -575,7 +570,6 @@ export const sampleAdminHeader = [
   },
 ];
 
-// Headers for CSV exports
 export const CSV_Header = [
   {
     label: "Name",
@@ -612,7 +606,6 @@ export const CSV_Header = [
   },
 ];
 
-// Mailing Templates
 export const mailingTemplate = {
   Interview:
     "<p>Edit content</p><br><p>Thank you for applying to Organization Name. We are excited to let you know that you have been shortlisted for joining the #dept Department!</p><p>We look forward to your active participation!</p>",
@@ -633,7 +626,7 @@ export const technicalCards = [
       "Explores cloud computing, infrastructure, and automation by building scalable applications, hosting hands-on workshops, and educating members about cloud platforms, containerization, CI/CD pipelines, and DevOps practices.",
     color: "#FBBC04",
     image: "/assets/images/icons/cloud.svg",
-    formLink: "/a1d920df-9eb9-49eb-b3a4-e4a3d1245ede", // Cloud & DevOps ID
+    formLink: "/a1d920df-9eb9-49eb-b3a4-e4a3d1245ede",
   },
   {
     title: "Game Dev",
@@ -641,7 +634,7 @@ export const technicalCards = [
       "Combines creativity and technical skills to design engaging, entertaining games, giving members hands-on experience with real-world game development tools, engines, and production workflows.",
     color: "#4285F4",
     image: "/assets/images/icons/game-dev.svg",
-    formLink: "/9055864f-c7dc-44cd-91d5-8759d32a496a", // App Development ID (placeholder)
+    formLink: "/9055864f-c7dc-44cd-91d5-8759d32a496a",
   },
   {
     title: "App Dev",
@@ -665,7 +658,7 @@ export const technicalCards = [
       "Applies AI, machine learning, and analytics to transform data into actionable insights, helping solve problems, build predictive models, and inspire innovation across projects.",
     color: "#EA4335",
     image: "/assets/images/icons/data-science.svg",
-    formLink: "/c0f3b1d1-ce05-45f6-9e34-ac9443fc5fcb", // App Development ID (placeholder)
+    formLink: "/c0f3b1d1-ce05-45f6-9e34-ac9443fc5fcb",
   },
   {
     title: "Competitive Programming",
@@ -673,7 +666,7 @@ export const technicalCards = [
       "Promotes problem-solving skills through coding contests, hackathons, and peer learning, helping members sharpen algorithms, logic, and efficiency while preparing for real-world tech challenges.",
     color: "#0F9D58",
     image: "/assets/images/icons/cp.svg",
-    formLink: "/3e9ac635-01d4-495e-aa87-a7335a2403c2", // App Development ID (placeholder)
+    formLink: "/3e9ac635-01d4-495e-aa87-a7335a2403c2",
   },
   {
     title: "Web Dev",
@@ -689,7 +682,7 @@ export const technicalCards = [
       "Encourages members to contribute to open-source projects, building collaboration skills, real-world coding experience, and a culture of transparency, learning, and global tech impact.",
     color: "#4285F4",
     image: "/assets/images/icons/open-source.svg",
-    formLink: "/ae7db51a-c6db-4f8d-9159-40767c5354cb", // App Development ID (placeholder)
+    formLink: "/ae7db51a-c6db-4f8d-9159-40767c5354cb",
   },
 ];
 
@@ -708,7 +701,7 @@ export const nonTechnicalCards = [
       "Builds partnerships and expands outreach by connecting with communities, sponsors, and collaborators, ensuring diverse opportunities and impactful collaborations both within and beyond campus.",
     color: "#4285F4",
     image: "/assets/images/icons/outreach.svg",
-    formLink: "/3936d5a2-acd9-4a98-ac97-42c2c92f5c02", // App Development ID (placeholder)
+    formLink: "/3936d5a2-acd9-4a98-ac97-42c2c92f5c02",
   },
   {
     title: "Publicity",
@@ -716,7 +709,7 @@ export const nonTechnicalCards = [
       "Drives online presence with creative campaigns, video editing, and storytelling, boosting engagement, promoting events, and showcasing the club to inspire participation and community growth.",
     color: "#EA4335",
     image: "/assets/images/icons/social-media.svg",
-    formLink: "/4499a966-2740-4c36-88dd-8916a909fc77", // App Development ID (placeholder)
+    formLink: "/4499a966-2740-4c36-88dd-8916a909fc77",
   },
   {
     title: "Management",
@@ -724,6 +717,6 @@ export const nonTechnicalCards = [
       "The backbone of the organization, turning vision into reality by planning, executing, and improvising. Oversees events, operations, and growth, ensuring smooth functioning, success, and impactful experiences.",
     color: "#FBBC04",
     image: "/assets/images/icons/management.svg",
-    formLink: "/c21ca066-ab4d-40a3-943c-f170d6312bdc", // App Development ID (placeholder)
+    formLink: "/c21ca066-ab4d-40a3-943c-f170d6312bdc",
   },
 ];

@@ -33,13 +33,6 @@ import { CSVLink } from "react-csv";
 import { CSV_Header } from "@/constants";
 
 const DataTable = ({ data }) => {
-  // masterData is the live source of truth: it starts from the `data` prop
-  // and is updated in place whenever an applicant is shortlisted/
-  // unshortlisted, so filtering never has to fall back to the stale
-  // original prop (that was the old bug: filtering by department after
-  // toggling a shortlist status made the toggle appear to revert, because
-  // the department filter re-derived its results from the original `data`
-  // prop instead of the current state).
   const [masterData, setMasterData] = useState(data);
   const [deptFilterValue, setDeptFilterValue] = useState("");
   const [shortlistFilterValue, setShortlistFilterValue] = useState("");

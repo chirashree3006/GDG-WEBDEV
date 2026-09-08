@@ -53,16 +53,6 @@ export async function POST(req) {
 
     const collection = db.collection("formData");
 
-    // The dedup/limit check and the write must happen atomically. The old
-    // code did a plain read (`.get()`) followed later by a plain `.add()`.
-    // The client submits both chosen departments in parallel
-    // (Promise.allSettled), so two POSTs for the same user land at the
-    // server at nearly the same instant -- both could read "0/2 used" before
-    // either write committed, letting a user slip past the 2-application
-    // cap or submit the same department twice. Wrapping the read + write in
-    // a Firestore transaction makes Firestore serialize (and retry) the two
-    // requests against each other so the count is always checked against
-    // the latest committed state.
     const result = await db.runTransaction(async (transaction) => {
       const existingSubmissionsSnap = await transaction.get(
         collection.where("Email", "==", userEmail)

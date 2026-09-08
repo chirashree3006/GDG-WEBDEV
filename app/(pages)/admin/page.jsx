@@ -14,12 +14,6 @@ export default async function AdminPage() {
 
   const isAdmin = session?.user?.role === "admin";
 
-  // Only ever query Firestore, and only ever ship applicant data to the
-  // client, when the server has already verified an admin session. The
-  // previous version fetched every applicant unconditionally and relied on
-  // a client-side role check to hide the UI -- but by then the full PII
-  // dataset was already sent to the browser in the page payload for any
-  // visitor, admin or not.
   let applicants = [];
   if (isAdmin) {
     const db = await connect();

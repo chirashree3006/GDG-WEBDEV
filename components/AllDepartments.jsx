@@ -2,7 +2,6 @@
 
 import React from "react";
 
-// MagicUI imports
 import BentoGridComp from "./BentoGridComp";
 
 const AllDepartments = () => {

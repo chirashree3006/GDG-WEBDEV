@@ -64,8 +64,6 @@ export default function SignInPage() {
         toast.error(res.error.message || "Could not sign in with Google.");
         setIsRedirecting(false);
       }
-      // On success, better-auth redirects the browser to Google; no further
-      // action needed here.
     } catch (err) {
       console.error("Google sign-in error:", err);
       toast.error("Something went wrong. Please try again.");

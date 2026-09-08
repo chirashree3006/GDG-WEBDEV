@@ -2,15 +2,6 @@
 
 import React from "react";
 
-/**
- * Department and Feature Showcase Card
- *
- * @param {object} props
- * @param {string} props.title
- * @param {string} props.description
- * @param {string} props.bgColor
- * @param {React.ComponentType} props.Icon
- */
 const Card = ({ title, description, bgColor, Icon }) => {
   return (
     <div className="group relative h-80 w-64 cursor-pointer">

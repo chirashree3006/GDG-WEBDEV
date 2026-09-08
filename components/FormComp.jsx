@@ -28,7 +28,6 @@ const normaliseQuestion = (question) => (
 );
 
 const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
-  // Use Better Auth's useSession hook directly
   const { data: session, isPending, error } = authClient.useSession();
   
   const user = session?.user;
@@ -165,7 +164,6 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
     localStorage.setItem(draftKey, JSON.stringify({ values: watchedValues, submittedDepartments }));
   }, [draftKey, isDraftReady, submittedDepartments, watchedValues]);
 
-  // Check if user is authenticated
   if (!isLoaded) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -193,7 +191,6 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
     );
   }
 
-  // User is authenticated
   const userEmail = user?.email;
 
   const handleSubmit = async (values) => {

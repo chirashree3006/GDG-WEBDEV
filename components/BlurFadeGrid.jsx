@@ -2,11 +2,9 @@
 
 import React from "react";
 
-// MagicUI import
 import BlurFade from "@/components/magicui/blur-fade";
 import MagicCardComp from "./MagicCardComp";
 
-// Constant Import
 import { reviews } from "../constants/index";
 import Link from "next/link";
 

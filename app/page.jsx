@@ -1,8 +1,6 @@
 "use client";
-// React import
 import React, { useState } from "react";
 
-// Component imports
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
@@ -21,7 +19,6 @@ const popupConfig = {
 const Home = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(true);
 
-  // Use Better Auth's useSession hook directly
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 

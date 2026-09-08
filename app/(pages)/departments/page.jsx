@@ -34,17 +34,14 @@ const DepartmentsListPage = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [isContinueDisabled, setIsContinueDisabled] = useState(true);
 
-  // Update selected counter
   useEffect(() => {
     setSelectedCount(selectedDepartments.length);
   }, [selectedDepartments]);
 
-  // Recalculate available registration slots
   useEffect(() => {
     setRemainingSlots(2 - submittedDepartments.length);
   }, [submittedDepartments]);
 
-  // Map selected departments to application route IDs
   useEffect(() => {
     const ids = departments
       .filter((dept) => selectedDepartments.includes(dept.name))
@@ -52,7 +49,6 @@ const DepartmentsListPage = () => {
     setSelectedIds(ids);
   }, [selectedDepartments]);
 
-  // Evaluate form submission readiness
   useEffect(() => {
     setIsContinueDisabled(selectedIds.length === 0);
   }, [selectedIds]);

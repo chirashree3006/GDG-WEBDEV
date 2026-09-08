@@ -53,7 +53,7 @@ export default function MailComposer({ recipients, handleRowSelection }) {
             Paragraph,
             Text,
             Heading.configure({
-                levels: [1], // All heading levels
+                levels: [1],
                 HTMLAttributes: {
                     class: `text-4xl font-bold`,
                 },
@@ -105,7 +105,7 @@ export default function MailComposer({ recipients, handleRowSelection }) {
                     <div className="flex flex-col gap-3 justify-between">
                         <div className="flex flex-col gap-3">
                             <div className="flex gap-3 items-center justify-evenly">
-                                {/* Subject */}
+                                {}
                                 <Input
                                     className="max-w-[73vw]"
                                     placeholder="Subject"
@@ -116,7 +116,7 @@ export default function MailComposer({ recipients, handleRowSelection }) {
                                         })
                                     }
                                 />
-                                {/* Select Template */}
+                                {}
                                 <Select
                                     onValueChange={(value) => {
                                         switch (value) {

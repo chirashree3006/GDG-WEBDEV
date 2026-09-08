@@ -1,14 +1,11 @@
 "use client";
-// React import
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-// MagicUI imports
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
 
-// Constants import
 import { reviews } from "@/constants/index";
 
 export const ReviewCard = ({ img, name, username, body }) => {
@@ -18,9 +15,7 @@ export const ReviewCard = ({ img, name, username, body }) => {
         <figure
             className={cn(
                 "relative w-64 cursor-pointer overflow-hidden rounded-xl border p-4",
-                // light styles
                 "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-                // dark styles
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
             )}
         >
