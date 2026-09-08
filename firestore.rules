@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // All reads/writes in this app go through Next.js server routes using
+    // the firebase-admin SDK, which authenticates via the service account
+    // and is not subject to these rules. There is no legitimate client-side
+    // (browser) access to Firestore in this project, so direct access is
+    // denied entirely. This closes off anyone who initializes their own
+    // Firebase client app against this project's public config (that
+    // config is not a secret) and tries to read/write "formData" or "users"
+    // directly, bypassing every check (auth, dedup, deadline, admin role)
+    // that the API routes enforce.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
