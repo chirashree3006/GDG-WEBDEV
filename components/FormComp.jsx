@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import * as z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Form,
   FormField,
@@ -167,10 +168,10 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
   // Check if user is authenticated
   if (!isLoaded) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <span className="mx-auto mb-4 block h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-          <p className="text-white">Loading...</p>
+          <span className="mx-auto mb-4 block h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -178,15 +179,13 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
 
   if (!isSignedIn) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh] m-10">
-        <div className="text-center">
-          <p className="text-2xl font-semibold text-white mb-4">
-            Sign In Required
-          </p>
-          <p className="text-lg text-gray-300 mb-6">
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center">
+          <p className="mb-2 text-2xl font-semibold">Sign In Required</p>
+          <p className="mb-6 text-muted-foreground">
             Please sign in to access the application form.
           </p>
-          <Button onClick={() => router.push("/auth/signin")} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={() => router.push("/auth/signin")} className="w-full">
             Sign In
           </Button>
         </div>
@@ -270,45 +269,68 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
 
   if (loading) {
     return (
-      <div>
-        <p>Checking your application status...</p>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <span className="mx-auto mb-4 block h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
+          <p className="text-muted-foreground">Checking your application status...</p>
+        </div>
       </div>
     );
   }
 
   if (!isFormOpen) {
     return (
-      <div>
-        <p>Recruitment Closed</p>
-        <p>Recruitment has now been terminated.</p>
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center">
+          <p className="mb-2 text-2xl font-semibold">Recruitment Closed</p>
+          <p className="text-muted-foreground">Recruitment has now been terminated.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <main>
-      {errorMessage && !isSubmitting && (
-        <div>
-          <p style={{ color: "red" }}>{errorMessage}</p>
-          <button type="button" onClick={() => router.push("/departments")}>
-            Go Back
-          </button>
+    <main className="container max-w-3xl py-12">
+      <AnimatePresence>
+        {errorMessage && !isSubmitting && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-6 flex flex-col items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between"
+          >
+            <p>{errorMessage}</p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => router.push("/departments")}
+            >
+              Go Back
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="mb-8 flex flex-col gap-3">
+        <span className="text-xs font-medium uppercase tracking-widest text-primary">
+          Step 02 &middot; Apply
+        </span>
+        <h1 className="text-3xl font-bold tracking-tight">Application Form</h1>
+        <p className="text-muted-foreground">
+          Applying to: <strong className="text-foreground">{departmentNames.join(", ")}</strong>
+        </p>
+        <div className="w-fit rounded-xl border border-border bg-card/60 px-4 py-2">
+          <CountdownTimer />
         </div>
-      )}
-
-      <h1>Application Form</h1>
-      <p>
-        Applying to: <strong>{departmentNames.join(", ")}</strong>
-      </p>
-
-      <hr />
+      </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <section>
-            <h2>About You</h2>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-8">
+          <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+            <h2 className="mb-6 text-lg font-semibold">About You</h2>
 
-            <div>
+            <div className="grid gap-5 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="Name"
@@ -344,7 +366,11 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
                     <FormControl>
-                      <select {...field} value={field.value || ""}>
+                      <select
+                        {...field}
+                        value={field.value || ""}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
                         <option value="" disabled>
                           Select Gender
                         </option>
@@ -366,7 +392,7 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
                   <FormItem>
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <Input {...field} readOnly type="email" />
+                      <Input {...field} readOnly type="email" className="opacity-70" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -388,7 +414,7 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
               />
             </div>
 
-            <div>
+            <div className="mt-5">
               <FormField
                 control={form.control}
                 name="Why do you want to join Organization Name?"
@@ -405,16 +431,12 @@ const FormComp = ({ dept1, dept2, isLoading, setIsLoading }) => {
             </div>
           </section>
 
-          <hr />
-
           {renderDepartmentQuestions(departmentNames[0], QuestionnaireData, form)}
           {departmentNames[1] && renderDepartmentQuestions(departmentNames[1], QuestionnaireData, form)}
 
-          <div style={{ marginTop: "20px" }}>
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Application"}
-            </button>
-          </div>
+          <Button type="submit" size="lg" disabled={isSubmitting} className="glow-ring-sm">
+            {isSubmitting ? "Submitting..." : "Submit Application"}
+          </Button>
         </form>
       </Form>
     </main>
@@ -431,39 +453,38 @@ const renderDepartmentQuestions = (department, QuestionnaireData, form) => {
   if (!questions.length) return null;
 
   return (
-    <section style={{ marginTop: "20px" }}>
-      <h2>{department} Questions</h2>
-      <div>
+    <section className="rounded-2xl border border-border bg-card p-6 sm:p-8" key={department}>
+      <h2 className="mb-6 text-lg font-semibold">{department} Questions</h2>
+      <div className="flex flex-col gap-5">
         {questions.map((question) => {
           const isCompact = question.type === "short-text";
 
           return (
-            <div key={question.name} style={{ marginBottom: "16px" }}>
-              <FormField
-                control={form.control}
-                name={question.name}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{question.name}</FormLabel>
-                    <FormControl>
-                      {isCompact ? (
-                        <Input
-                          {...field}
-                          placeholder={question.placeholder || "Answer..."}
-                        />
-                      ) : (
-                        <Textarea
-                          {...field}
-                          rows={4}
-                          placeholder={question.placeholder || "2-3 sentences"}
-                        />
-                      )}
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              key={question.name}
+              control={form.control}
+              name={question.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{question.name}</FormLabel>
+                  <FormControl>
+                    {isCompact ? (
+                      <Input
+                        {...field}
+                        placeholder={question.placeholder || "Answer..."}
+                      />
+                    ) : (
+                      <Textarea
+                        {...field}
+                        rows={4}
+                        placeholder={question.placeholder || "2-3 sentences"}
+                      />
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           );
         })}
       </div>

@@ -149,3 +149,57 @@ The department/shortlist filters (`filterFunc`/`shortlistedFilterFunc`) re-deriv
 ## Known content placeholders — intentionally left alone
 
 `constants/index.js`'s department `name`/`description` fields, and "Organization Name" placeholders in `app/layout.js`, `components/Footer.jsx`, and `components/FormComp.jsx`, are template placeholders, not bugs — replace them with your actual club name and department content before deploying. I did not fabricate replacement content for these since I have no way to know the real values from the code alone.
+
+---
+
+## 6. "Make it perfect" pass — more real bugs found, plus a full UI/UX design system
+
+Prompted by being asked directly whether everything necessary was done, I went back through every file I hadn't yet manually reviewed. Found several more real, previously-undiscovered bugs, then built out the visual design the brief also asked for.
+
+### 6.1 Sign-in never actually offered Google OAuth (see section 1a above)
+The most significant one — covered in detail above. Anyone could self-register with any email/password, bypassing the VIT-email identity check the whole app assumes.
+
+### 6.2 The entire visual theme was undefined
+**File:** `app/globals.css`
+
+This is the reason nearly every page "looked bare" despite the app already depending on shadcn/ui, Tailwind, framer-motion, and several magicui components. `globals.css` only had the three `@tailwind` directives and a body reset — **none** of the CSS custom properties (`--background`, `--foreground`, `--primary`, `--border`, `--card`, etc.) that shadcn's components and `tailwind.config.js`'s color tokens (`hsl(var(--background))` etc.) depend on were ever defined. Every `bg-background`, `text-foreground`, `border-border`, `bg-primary` class anywhere in the app was resolving to `hsl( )` — invalid CSS, silently dropped by the browser. Added the full light/dark token set (slate base, matching `components.json`'s configured base color), with `--primary` customized to a blue accent, plus a few custom utilities (`.text-gradient`, `.glow-ring`, `.grid-bg`, `.glass`) for the redesign.
+
+### 6.3 `ThemeProvider` was imported but never mounted
+**File:** `app/layout.js`
+
+`import { ThemeProvider } from "@/components/theme-provider"` was present but the component was never rendered — `children` was wrapped only in `<SubmissionsProvider>`. Without it, `next-themes` was never initialized: `useTheme()` calls in `ThemeToggle.jsx` and `MagicCardComp.jsx` had no provider context, and the `dark` class controlling every `dark:` Tailwind variant across the app was never being applied. Now properly wraps the tree with `attribute="class" defaultTheme="dark" enableSystem={false}`.
+
+### 6.4 A pattern of components that were built correctly but never wired into any page
+Beyond the Google sign-in button and bulk-email composer found earlier, the same thing turned up repeatedly:
+- **`ThemeToggle.jsx`** — a complete, correct light/dark switch — never rendered anywhere. Added to `NavBar`.
+- **`CountdownTimer.jsx`** — imported into both `FormComp.jsx` and `NavBar.jsx`, rendered in neither. Now shown on the homepage hero and inside the application form (also fixed: it hardcoded `text-white`/`text-gray-*` instead of theme tokens, which would've been invisible on a light background once the theme toggle above actually started working).
+- **`PopupComp.jsx`** — imported the real shadcn `Dialog` components and then rendered a plain bordered `<div>` instead of using them. Rewired to use the actual `Dialog`.
+- **`UserButton.jsx`** — imported `Avatar` and `DropdownMenu` components, rendered a bare `<span>` + `<button>` instead. Rebuilt to actually use them.
+- **`app/auth/signin/page.jsx`** — see 1a; imported `Card`/`Button`/`Input`/`Label` and two custom fonts, used none of them.
+
+### 6.5 `DeptHero` crashed the `/development` page
+**File:** `components/DeptHero.jsx`, used from `app/(pages)/development/page.jsx`
+
+`DeptHero` unconditionally called `setIsLoading(false)` in a `useEffect`. The `/development` page renders `<DeptHero dept={{ name: "..." }} />` without passing `setIsLoading` at all, so this threw `setIsLoading is not a function` on every load of that page (the same missing-prop pattern also exists, commented out, in `BentoGridComp.jsx`). Guarded the call so it's a no-op when the prop isn't supplied.
+
+### 6.6 `app/_error.js` used the Pages Router API in an App Router project
+This project only has an `app/` directory (no `pages/`), i.e. it's on the App Router. `_error.js` with `Error.getInitialProps` is a **Pages Router** convention — Next's App Router doesn't recognize that filename or API at all, so this file was 100% dead: it never ran, for any error, ever. Removed it and added the real App Router equivalents: `app/error.jsx` (a client-component error boundary with `error`/`reset` props) and `app/not-found.jsx` (a styled site-wide 404 — previously only `/join/[...joinIds]` had a scoped one; every other bad URL fell through to Next's unstyled default).
+
+### 6.7 Dead state/effects in the join page
+**File:** `app/(pages)/join/[...joinIds]/page.jsx`
+
+`resolvedDepartment1`/`resolvedDepartment2` were computed via `useEffect` from `departmentParamIds` and then never used — the actual render recomputed the same thing again, directly, via `reviews.filter(...)`. `validationScore` and `pageMountTimestamp` were tracked and never read anywhere. Removed all four plus their effects; the page behaves identically, with about half as much state.
+
+### 6.8 Design system + full visual pass
+With the token/provider foundation fixed, rebuilt the site's presentation layer:
+- **Global**: wired in the "Product Sans" font files that were already sitting in `public/assets/fonts/` (Google's brand typeface, used across GDG-branded material) via `next/font/local`, applied site-wide through `tailwind.config.js`'s `fontFamily.sans` — replacing four different, inconsistently-applied Google Fonts across different pages (Inter, DM Sans, Space Grotesk, Bricolage Grotesque, mixed arbitrarily per file) with one consistent typeface.
+- **`NavBar`**: sticky glass header on scroll, gradient wordmark, animated underline nav links, wired-in theme toggle, avatar dropdown.
+- **`Hero`** (homepage): grid-pattern + particle background, radial glow, framer-motion staggered entrance, gradient headline, live countdown to the deadline, glowing CTA.
+- **`/departments`**: full redesign from a bare checkbox `<ul>` to an animated card grid — each card colored by its department's existing `tone` value and icon (`constants/index.js` already had both, unused by the old list view), selection state with a ring + check-mark, staggered entrance, sticky "continue" bar with live count.
+- **`FormComp`** (application form): wrapped in bordered card sections ("About You" / per-department questions), styled every state (loading, sign-in-required, checking-status, closed, error banner) instead of plain text, added the countdown timer for urgency.
+- **Admin dashboard**: styled sign-in-required / access-denied / loading states as cards instead of plain text; swapped the table's hardcoded `bg-[#121212]` for the theme's `bg-card` token so it actually respects light/dark mode; added a page header.
+- **`PopupComp`, `UserButton`, `Footer`, `DeptHero`, `GDGLoader`, `not-found` pages, `development` page**: brought in line with the same token/spacing system.
+
+### 6.9 Still not done
+- I did not restyle `MailComposer.jsx`'s toolbar (it already uses real shadcn `Button`/`Select`/`Dialog` components, so it inherits the new theme automatically without needing a rewrite) or `BentoGridComp.jsx` (611 lines, appears to be an alternate/unused homepage layout — not touched since nothing currently renders it).
+- Still no full `npm run build` completed end-to-end in this environment (see section 2) — a visual/build check on your own machine is worth doing before treating this as final.

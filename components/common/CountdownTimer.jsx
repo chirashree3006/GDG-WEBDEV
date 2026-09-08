@@ -42,12 +42,12 @@ const CountdownTimer = ({ targetDate = "2026-08-23T23:59:59+05:30", className = 
     <div className="flex flex-col items-center">
       <div className="relative">
         <div className=" ">
-          <div className="font-bold text-white tracking-wider">
+          <div className="font-bold text-foreground tracking-wider">
             {value.toString().padStart(2, "0")}
           </div>
         </div>
       </div>
-      <div className="text-gray-400 text-[10px] uppercase tracking-wide">
+      <div className="text-muted-foreground text-[10px] uppercase tracking-wide">
         {label}
       </div>
     </div>
@@ -57,15 +57,15 @@ const CountdownTimer = ({ targetDate = "2026-08-23T23:59:59+05:30", className = 
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <div className="flex gap-3">
         <TimeUnit value={timeLeft.days} label="Days" />
-        <div className="flex items-center text-2xl text-gray-500 font-bold">
+        <div className="flex items-center text-2xl text-muted-foreground/60 font-bold">
           :
         </div>
         <TimeUnit value={timeLeft.hours} label="Hours" />
-        <div className="flex items-center text-2xl text-gray-500 font-bold">
+        <div className="flex items-center text-2xl text-muted-foreground/60 font-bold">
           :
         </div>
         <TimeUnit value={timeLeft.minutes} label="Minutes" />
-        <div className="flex items-center text-2xl text-gray-500 font-bold">
+        <div className="flex items-center text-2xl text-muted-foreground/60 font-bold">
           :
         </div>
         <TimeUnit value={timeLeft.seconds} label="Seconds" />

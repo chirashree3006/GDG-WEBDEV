@@ -2,27 +2,18 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import UserButton from "./UserButton";
+import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
-import { FaUser } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
-import PopupComp from "./PopupComp";
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
-
-import { DM_Sans } from "next/font/google";
-import CountdownTimer from "./common/CountdownTimer";
-
-const dm_sans = DM_Sans({ weight: ["400"], subsets: ["latin"] });
 
 const NavBar = () => {
-  const imgSize = 40;
   const router = useRouter();
 
   // Use Better Auth's useSession hook directly
-  const { data: session, isPending, error } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
-  // Track component-level state for navigation and display
   const [userSessionEmail, setUserSessionEmail] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasAdminPermissions, setHasAdminPermissions] = useState(false);
@@ -59,9 +50,7 @@ const NavBar = () => {
 
   // Build navigation items list
   useEffect(() => {
-    const baseItems = [
-      { label: "Departments", href: "/departments" }
-    ];
+    const baseItems = [{ label: "Departments", href: "/departments" }];
     if (isAuthenticated && hasAdminPermissions) {
       baseItems.push({ label: "Admin Panel", href: "/admin" });
     }
@@ -72,30 +61,46 @@ const NavBar = () => {
   const activeUserDataSnapshot = session?.user ? JSON.parse(JSON.stringify(session.user)) : null;
 
   return (
-    <header style={{ opacity: scrollElevation > 500 ? 0.95 : 1 }}>
-      <nav>
-        <div>
-          <Link href="/">
-            <strong>Recruitment Portal</strong>
-          </Link>
-        </div>
-        <div>
-          {navigationRouteList.map((item, idx) => (
-            <React.Fragment key={`${item.href}-${idx}`}>
-              <Link href={item.href}>{item.label}</Link>
-              {" | "}
-            </React.Fragment>
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrollElevation > 24 ? "glass border-b border-border" : "border-b border-transparent"
+      }`}
+    >
+      <nav className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary">
+            <Sparkles className="h-4 w-4" />
+          </span>
+          <span>
+            Recruitment<span className="text-gradient">2026</span>
+          </span>
+        </Link>
+
+        <div className="hidden items-center gap-6 md:flex">
+          {navigationRouteList.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all hover:after:w-full"
+            >
+              {item.label}
+            </Link>
           ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
           {isPending ? (
-            <span>Loading...</span>
+            <span className="h-9 w-9 animate-pulse rounded-full bg-muted" />
           ) : !isAuthenticated ? (
-            <Link href="/auth/signin">Sign In</Link>
+            <Button size="sm" onClick={() => router.push("/auth/signin")}>
+              Sign In
+            </Button>
           ) : (
             <UserButton user={activeUserDataSnapshot} />
           )}
         </div>
       </nav>
-      <hr />
     </header>
   );
 };

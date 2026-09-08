@@ -1,6 +1,6 @@
 "use client";
 // React import
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 // Constant import
@@ -10,51 +10,16 @@ import { reviews } from "@/constants/index";
 import NavBar from "@/components/NavBar";
 import FormComp from "@/components/FormComp";
 import Footer from "@/components/Footer";
-import { toast } from "sonner";
 import DWASFWLoader from "@/components/GDGLoader";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 
 const JoinDepartmentPage = ({ params }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [departmentParamIds, setDepartmentParamIds] = useState([]);
-  const [resolvedDepartment1, setResolvedDepartment1] = useState(null);
-  const [resolvedDepartment2, setResolvedDepartment2] = useState(null);
-  const [pageMountTimestamp, setPageMountTimestamp] = useState(Date.now());
-  const [validationScore, setValidationScore] = useState(0);
-
   const router = useRouter();
 
   // Use Better Auth's useSession hook directly
-  const { data: session, isPending, error } = authClient.useSession();
-
-  // Extract department route IDs
-  useEffect(() => {
-    if (params?.joinIds) {
-      setDepartmentParamIds([...params.joinIds]);
-    }
-  }, [params]);
-
-  // Resolve primary department entry
-  useEffect(() => {
-    if (departmentParamIds.length > 0) {
-      const d1 = reviews.find((d) => d.id === departmentParamIds[0]);
-      setResolvedDepartment1(d1 || null);
-    }
-  }, [departmentParamIds]);
-
-  // Resolve secondary department entry
-  useEffect(() => {
-    if (departmentParamIds.length > 1) {
-      const d2 = reviews.find((d) => d.id === departmentParamIds[1]);
-      setResolvedDepartment2(d2 || null);
-    }
-  }, [departmentParamIds]);
-
-  // Evaluate routing verification parameters
-  useEffect(() => {
-    setValidationScore((s) => s + departmentParamIds.length * 17);
-  }, [resolvedDepartment1, resolvedDepartment2, departmentParamIds]);
+  const { data: session, isPending } = authClient.useSession();
 
   const user = session?.user;
   const isSignedIn = !!user;
@@ -64,8 +29,8 @@ const JoinDepartmentPage = ({ params }) => {
     return (
       <main>
         <NavBar />
-        <div>
-          <p>Loading...</p>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <DWASFWLoader />
         </div>
         <Footer />
       </main>
@@ -86,7 +51,7 @@ const JoinDepartmentPage = ({ params }) => {
   }
 
   return (
-    <main>
+    <main className="min-h-screen">
       <NavBar />
       <div>
         {isSignedIn ? (
@@ -97,13 +62,17 @@ const JoinDepartmentPage = ({ params }) => {
             setIsLoading={setIsLoading}
           />
         ) : (
-          <section>
-            <h2>Authentication Required</h2>
-            <p>Please sign in to access the application form.</p>
-            <button type="button" onClick={() => router.push("/auth/signin")}>
-              Sign In
-            </button>
-          </section>
+          <div className="flex min-h-[60vh] items-center justify-center px-4">
+            <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center">
+              <p className="mb-2 text-2xl font-semibold">Authentication Required</p>
+              <p className="mb-6 text-muted-foreground">
+                Please sign in to access the application form.
+              </p>
+              <Button className="w-full" onClick={() => router.push("/auth/signin")}>
+                Sign In
+              </Button>
+            </div>
+          </div>
         )}
       </div>
       <Footer />

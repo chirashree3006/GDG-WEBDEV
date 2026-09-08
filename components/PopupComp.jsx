@@ -11,21 +11,26 @@ import {
 import { PiArrowRightThin } from "react-icons/pi";
 
 const PopupComp = ({ isOpen, onClose, PopupData }) => {
-  if (!isOpen) return null;
-
   return (
-    <div style={{ border: "1px solid black", padding: "16px", margin: "16px 0" }}>
-      <h2>{PopupData?.header}</h2>
-      <p>{PopupData?.description}</p>
-      <ul>
-        {PopupData?.message.map((message, index) => (
-          <li key={index}>{message}</li>
-        ))}
-      </ul>
-      <button type="button" onClick={onClose}>
-        Got it
-      </button>
-    </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{PopupData?.header}</DialogTitle>
+          <DialogDescription>{PopupData?.description}</DialogDescription>
+        </DialogHeader>
+        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+          {PopupData?.message.map((message, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <PiArrowRightThin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              {message}
+            </li>
+          ))}
+        </ul>
+        <Button onClick={onClose} className="mt-2 w-full">
+          Got it
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 

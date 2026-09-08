@@ -1,9 +1,9 @@
-// Font
-import { Inter } from "next/font/google";
 // Providers
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SubmissionsProvider } from "@/components/SubmissionsProvider";
+// Fonts
+import { productSans } from "./fonts";
 // Styling
 import "./globals.css";
 
@@ -14,12 +14,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={productSans.variable} suppressHydrationWarning>
       <body>
-        <SubmissionsProvider>
-          {children}
-          <Toaster />
-        </SubmissionsProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <SubmissionsProvider>
+            {children}
+            <Toaster />
+          </SubmissionsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

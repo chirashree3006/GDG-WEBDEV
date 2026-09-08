@@ -258,8 +258,8 @@ const DataTable = ({ data }) => {
   };
 
   return (
-    <div className="bg-[#121212] flex flex-col gap-3 p-3 mt-5">
-      <div className="flex items-start border-none justify-start gap-3 p-1 overflow-x-scroll">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-3">
         <Input
           value={globalFilter || ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -300,7 +300,7 @@ const DataTable = ({ data }) => {
         </Button>
       </div>
 
-      <div className="border rounded-md">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card">
         <Table {...getTableProps()}>
           <TableHeader>
             {headerGroups.map((hg) => (
